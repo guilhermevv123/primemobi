@@ -243,29 +243,62 @@
 
     if (CFG.pixelId && window.fbq) window.fbq("track", "Lead", { content_name: lead.modelo });
 
-    if (!CFG.webhookUrl) {
+    function falhou() {
+      enviando = false;
+      botao.disabled = false;
+      botao.textContent = "Quero receber a proposta";
+      alert("Não conseguimos enviar agora. Vamos abrir o WhatsApp da loja para você mandar direto.");
+      window.location.href = linkWhats(mensagemWhats(lead));
+    }
+
+    var envios = [];
+
+    // 1) Banco de cadastros (painel da loja)
+    if (CFG.supabaseUrl && CFG.supabaseKey) {
+      envios.push(fetch(CFG.supabaseUrl + "/rest/v1/leads", {
+        method: "POST",
+        headers: {
+          "apikey": CFG.supabaseKey,
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify({
+          nome: lead.nome.slice(0, 120),
+          whatsapp: lead.whatsapp,
+          modelo: lead.modelo,
+          modelo_id: lead.modeloId,
+          cor: lead.cor || null,
+          cidade: lead.cidade.slice(0, 80),
+          pagamento: lead.pagamento || null,
+          prazo: lead.prazo || null,
+          test_drive: lead.testDrive === "Sim",
+          observacao: lead.observacao ? lead.observacao.slice(0, 1000) : null,
+          origem: (function () { var o = { pagina: lead.pagina }; for (var k in u) o[k] = u[k]; return o; })()
+        })
+      }).then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); }));
+    }
+
+    // 2) Webhook extra (n8n, CRM...), opcional
+    if (CFG.webhookUrl) {
+      var hook = fetch(CFG.webhookUrl, {
+        method: "POST",
+        mode: "no-cors",
+        keepalive: true,
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(lead)
+      });
+      if (!envios.length) envios.push(hook); else hook.catch(function () {});
+    }
+
+    if (!envios.length) {
       // Sem destino configurado: o cadastro segue direto pro WhatsApp da loja.
       sucesso(lead, true);
       window.location.href = linkWhats(mensagemWhats(lead));
       return;
     }
 
-    var tempo = new Promise(function (res) { setTimeout(res, 7000); });
-    var envio = fetch(CFG.webhookUrl, {
-      method: "POST",
-      mode: "no-cors",
-      keepalive: true,
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(lead)
-    }).catch(function () {
-      enviando = false;
-      botao.disabled = false;
-      botao.textContent = "Quero receber a proposta";
-      alert("Não conseguimos enviar agora. Vamos abrir o WhatsApp da loja para você mandar direto.");
-      window.location.href = linkWhats(mensagemWhats(lead));
-      throw new Error("falhou");
-    });
-    Promise.race([envio, tempo]).then(function () { sucesso(lead, false); }, function () {});
+    var tempo = new Promise(function (res, rej) { setTimeout(function () { rej(new Error("tempo")); }, 12000); });
+    Promise.race([Promise.all(envios), tempo]).then(function () { sucesso(lead, false); }, falhou);
   });
 
   function mostrarForm() {

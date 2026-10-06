@@ -7,8 +7,12 @@ window.PRIME_CONFIG = {
   endereco: "Rua Castro Alves, nº 45 — Centro, Gandu - BA",
   mapa: "https://www.google.com/maps/search/?api=1&query=Rua+Castro+Alves+45+Gandu+BA",
 
-  // Para onde vão os cadastros (planilha do Google, n8n, CRM...). Veja o README.
-  // Vazio = o cadastro segue direto para o WhatsApp da loja.
+  // Banco onde ficam os cadastros (painel em /painel/). A chave abaixo é PÚBLICA
+  // de propósito: com ela só dá para gravar cadastro novo, nunca ler.
+  supabaseUrl: "https://ycgocezwmsxwtrubfogu.supabase.co",
+  supabaseKey: "sb_publishable_IcznIbuxdeWnn4LMTcAZsw_UnxajH5r",
+
+  // Opcional: mandar uma cópia de cada cadastro para outro lugar (n8n, CRM...).
   webhookUrl: "",
 
   // Pixel da Meta (opcional). Coloque o ID para medir os leads dos anúncios.

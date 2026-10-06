@@ -22,19 +22,23 @@ Para publicar, basta subir a pasta inteira (GitHub Pages, EasyPanel, Hostinger�
 
 ## Para onde vão os cadastros
 
-Em `js/config.js`, campo `webhookUrl`:
+Cada envio do formulário é gravado no banco **Supabase "primemobi"** (projeto `ycgocezwmsxwtrubfogu`,
+São Paulo) e aparece no **painel**: `/painel/` (ex.: https://guilhermevv123.github.io/primemobi/painel/).
 
-- **Vazio (padrão):** ao enviar, o cliente é levado ao WhatsApp da loja com a mensagem
-  pronta (modelo, cor, nome, cidade, pagamento). Funciona sem configurar nada,
-  mas o cliente precisa apertar "enviar" no WhatsApp.
-- **Planilha Google (recomendado):** siga as instruções em `integracoes/planilha-google.gs`
-  e cole a URL `/exec` no `webhookUrl`. Cada cadastro vira uma linha com link
-  que abre a conversa do cliente no WhatsApp. O cliente ainda vê o botão
-  "Quero adiantar pelo WhatsApp".
-- **n8n / CRM:** qualquer URL que aceite POST com JSON (o corpo vai como texto JSON).
+No painel o time vê os cadastros novos, clica em **Chamar no WhatsApp** (mensagem já pronta;
+o cadastro passa sozinho para "Em atendimento"), muda a situação (Novo / Em atendimento /
+Vendido / Perdido), escreve anotações e baixa tudo em planilha (CSV que abre no Excel e no
+Google Planilhas). Atualiza sozinho a cada minuto.
 
-Campos enviados: `data, modelo, modeloId, cor, nome, whatsapp (55+DDD+número), cidade,
-pagamento, prazo, testDrive, observacao, pagina` + `utm_*`/`fbclid` quando vierem do anúncio.
+Segurança: a chave em `js/config.js` é pública de propósito — com ela só dá para **gravar**
+cadastro novo. Ler e mudar cadastros só com a senha do painel (guardada no banco como hash,
+funções `painel_leads` / `painel_atualizar` em `supabase/leads.sql`).
+A senha fica fora do repositório (`~/.config/prime-mobi/painel.env`). Para trocar:
+`update painel_acesso set senha_hash = extensions.crypt('NOVA', extensions.gen_salt('bf'));`
+
+Se o banco não responder, o cliente é levado ao WhatsApp da loja com a mensagem pronta
+(nenhum cadastro se perde). `webhookUrl` em `js/config.js` manda uma cópia extra para
+n8n/CRM, se quiser; `integracoes/planilha-google.gs` é a alternativa com Planilha Google.
 
 ## Link direto para um modelo
 

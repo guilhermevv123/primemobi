@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Painel de Cadastros — Prime Mobi</title>
+  <meta name="theme-color" content="#0e0f0f">
+  <link rel="icon" href="../assets/img/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Saira:ital,wdth,wght@1,75,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css?v=4">
+  <link rel="stylesheet" href="painel.css?v=1">
+</head>
+<body class="painel">
+
+  <!-- Entrar -->
+  <section class="entrar" id="entrar">
+    <form class="entrar__caixa" id="form-entrar">
+      <img src="../assets/img/logo.png" alt="Prime Mobi" width="150" height="98">
+      <h1 class="titulo">Painel de <em>cadastros</em></h1>
+      <p>Clientes que pediram proposta pelo site.</p>
+      <label for="senha">Senha do painel</label>
+      <input id="senha" type="password" autocomplete="current-password" required>
+      <label class="check"><input type="checkbox" id="lembrar" checked><span>Lembrar neste aparelho</span></label>
+      <p class="erro mostrar" id="erro-entrar" hidden></p>
+      <button class="btn btn--lime btn--grande" type="submit" id="btn-entrar">Entrar</button>
+    </form>
+  </section>
+
+  <!-- Painel -->
+  <div class="app" id="app" hidden>
+    <header class="topo">
+      <div class="topo__in">
+        <a href="../" class="topo__logo" aria-label="Ver o site"><img src="../assets/img/logo.png" alt="Prime Mobi" width="430" height="282"></a>
+        <strong class="app__nome">Cadastros do site</strong>
+        <div class="app__acoes">
+          <button class="btn btn--ghost btn--sm" type="button" id="btn-atualizar">Atualizar</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="btn-planilha">Baixar planilha</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="btn-sair">Sair</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="app__in">
+      <div class="resumo" id="resumo"></div>
+
+      <div class="barra">
+        <div class="filtros" id="filtros-status" role="tablist" aria-label="Filtrar por situação"></div>
+        <input type="search" id="busca" placeholder="Buscar nome, cidade, modelo ou telefone">
+      </div>
+
+      <p class="aviso" id="atualizado"></p>
+      <div class="lista" id="lista"></div>
+    </main>
+  </div>
+
+  <script src="../js/config.js?v=4"></script>
+  <script src="painel.js?v=1"></script>
+</body>
+</html>
