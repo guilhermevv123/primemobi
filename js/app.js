@@ -11,7 +11,7 @@
   function paginaCatalogo(m) { return "assets/img/fichas/" + m.id + ".webp"; }
   function porId(id) { for (var i = 0; i < MODELOS.length; i++) if (MODELOS[i].id === id) return MODELOS[i]; return null; }
   function esc(t) { var d = document.createElement("div"); d.textContent = t == null ? "" : String(t); return d.innerHTML; }
-  function linkWhats(texto) { return "https://wa.me/" + CFG.whatsapp + (texto ? "?text=" + encodeURIComponent(texto) : ""); }
+  function linkWhats(texto) { return "https://api.whatsapp.com/send?phone=" + CFG.whatsapp + (texto ? "&text=" + encodeURIComponent(texto) : ""); }
 
   function nums(m) {
     var d = m.destaques;
@@ -187,14 +187,19 @@
   }
 
   function mensagemWhats(l) {
-    return "Olá, Prime Mobi! Vim pelo site e quero uma proposta.\n\n" +
-      "Modelo: " + l.modelo + (l.cor ? " (" + l.cor + ")" : "") + "\n" +
-      "Nome: " + l.nome + "\n" +
-      "Cidade: " + l.cidade + "\n" +
-      "Pagamento: " + l.pagamento + "\n" +
-      "Quando: " + l.prazo +
-      (l.testDrive === "Sim" ? "\nQuero agendar um test drive." : "") +
-      (l.observacao ? "\nObs.: " + l.observacao : "");
+    var nome = l.nome.split(" ")[0];
+    var linhas = [
+      "Oi, Prime Mobi! Aqui é " + nome + ", vim pelo site 😊",
+      "",
+      "Quero uma proposta da *" + l.modelo + "*" + (l.cor ? " na cor " + l.cor : "") + ".",
+      "",
+      "📍 Cidade: " + l.cidade,
+      "💳 Pagamento: " + l.pagamento,
+      "🗓️ Quero comprar: " + l.prazo.toLowerCase()
+    ];
+    if (l.testDrive === "Sim") linhas.push("🏍️ Quero agendar um test drive");
+    if (l.observacao) linhas.push("", "Dúvida: " + l.observacao);
+    return linhas.join("\n");
   }
 
   var enviando = false;
@@ -314,10 +319,12 @@
     $("#sucesso-nome").textContent = lead.nome.split(" ")[0];
     $("#sucesso-modelo").textContent = lead.modelo;
     $("#sucesso-whats").href = linkWhats(mensagemWhats(lead));
-    $("#sucesso-whats").textContent = foiProWhats ? "Abrir o WhatsApp de novo" : "Quero adiantar pelo WhatsApp";
+    $("#sucesso-whats").textContent = foiProWhats ? "Abrir o WhatsApp de novo" : "Não abriu? Toque aqui";
     form.hidden = true;
     $("#sucesso").hidden = false;
     $("#sucesso").focus();
+    // Abre o WhatsApp da loja com a mensagem pronta: o cliente só aperta enviar.
+    if (!foiProWhats) setTimeout(function () { window.location.href = linkWhats(mensagemWhats(lead)); }, 900);
   }
 
   $("#sucesso-outro").addEventListener("click", function () {

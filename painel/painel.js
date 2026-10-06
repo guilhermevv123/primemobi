@@ -169,7 +169,7 @@
           (l.observacao ? '<p class="lead__obs">“' + esc(l.observacao) + '”</p>' : '') +
         '</div>' +
         '<div class="lead__lado">' +
-          '<a class="btn btn--whats" target="_blank" rel="noopener" data-chamar href="https://wa.me/' + esc(l.whatsapp) + '?text=' + encodeURIComponent(mensagem(l)) + '">Chamar no WhatsApp</a>' +
+          '<a class="btn btn--whats" target="_blank" rel="noopener" data-chamar href="https://api.whatsapp.com/send?phone=' + esc(l.whatsapp) + '&amp;text=' + encodeURIComponent(mensagem(l)) + '">Chamar no WhatsApp</a>' +
           '<select data-mudar aria-label="Situação">' + STATUS.map(function (s) { return '<option' + (s === l.status ? " selected" : "") + '>' + s + '</option>'; }).join("") + '</select>' +
         '</div>' +
         '<textarea data-nota rows="1" placeholder="Anotação do time (ex.: mandei valores, volta sexta)">' + esc(l.nota || "") + '</textarea>' +
