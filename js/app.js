@@ -91,6 +91,7 @@
     $("#ficha-cores-box").hidden = !m.cores.length;
     $("#ficha-cores").innerHTML = m.cores.map(function (c) { return "<li>" + esc(c) + "</li>"; }).join("");
     $("#ficha-catalogo").href = paginaCatalogo(m);
+    if (CFG.pixelId && window.fbq) window.fbq("track", "ViewContent", { content_name: m.nome, content_ids: [m.id], content_type: "product" });
     if (typeof ficha.showModal === "function") ficha.showModal(); else ficha.setAttribute("open", "");
     ficha.scrollTop = 0;
   }

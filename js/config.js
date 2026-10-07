@@ -16,5 +16,5 @@ window.PRIME_CONFIG = {
   webhookUrl: "",
 
   // Pixel da Meta (opcional). Coloque o ID para medir os leads dos anúncios.
-  pixelId: ""
+  pixelId: "1313069851892667"
 };
