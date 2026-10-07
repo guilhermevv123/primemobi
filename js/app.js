@@ -7,7 +7,7 @@
   var $ = function (s, el) { return (el || document).querySelector(s); };
   var $$ = function (s, el) { return Array.prototype.slice.call((el || document).querySelectorAll(s)); };
 
-  function foto(m) { return "assets/img/motos/" + m.id + ".webp"; }
+  function foto(m) { return "assets/img/motos/" + m.id + ".webp?v=2"; }
   function paginaCatalogo(m) { return "assets/img/fichas/" + m.id + ".webp"; }
   function porId(id) { for (var i = 0; i < MODELOS.length; i++) if (MODELOS[i].id === id) return MODELOS[i]; return null; }
   function esc(t) { var d = document.createElement("div"); d.textContent = t == null ? "" : String(t); return d.innerHTML; }
